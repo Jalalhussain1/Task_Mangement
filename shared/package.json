@@ -1,0 +1,24 @@
+{
+  "name": "@task-management/shared",
+  "version": "1.0.0",
+  "description": "Shared utilities and types for task management application",
+  "main": "src/index.js",
+  "types": "src/index.d.ts",
+  "scripts": {
+    "build": "echo 'No build step required for shared utilities'",
+    "test": "jest",
+    "lint": "eslint src/",
+    "clean": "rm -rf node_modules"
+  },
+  "dependencies": {
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "eslint": "^8.55.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
+
