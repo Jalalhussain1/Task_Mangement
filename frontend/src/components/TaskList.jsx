@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import DeleteConfirmModal from './DeleteConfirmModal';
 
 const TaskList = ({ tasks, onEdit, onDelete, onToggleComplete }) => {
   const { user } = useAuth();
+  const [deleteTask, setDeleteTask] = useState(null);
   if (tasks.length === 0) {
     return (
       <div className="text-center py-16">
-        <div className="bg-white rounded-2xl shadow-lg p-12 border border-gray-100 max-w-md mx-auto">
+        <div className="card p-12 max-w-md mx-auto">
           <div className="text-gray-400 mb-6">
             <svg
               className="mx-auto h-16 w-16"
@@ -22,9 +24,9 @@ const TaskList = ({ tasks, onEdit, onDelete, onToggleComplete }) => {
               />
             </svg>
           </div>
-          <h3 className="text-xl font-semibold text-gray-800 mb-3">No tasks yet</h3>
-          <p className="text-gray-600 mb-6">Start organizing your day by creating your first task!</p>
-          <div className="w-16 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mx-auto"></div>
+          <h3 className="text-xl font-semibold text-white mb-3">No tasks yet</h3>
+          <p className="text-gray-300 mb-6">Start organizing your day by creating your first task!</p>
+          <div className="w-16 h-1 bg-gradient-to-r from-orange-400 to-orange-600 rounded-full mx-auto"></div>
         </div>
       </div>
     );
@@ -35,8 +37,8 @@ const TaskList = ({ tasks, onEdit, onDelete, onToggleComplete }) => {
       {tasks.map((task) => (
         <div
           key={task.id}
-          className={`bg-white rounded-2xl shadow-lg p-4 sm:p-6 border border-gray-100 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 ${
-            task.completed ? 'opacity-75 bg-gray-50' : ''
+          className={`card p-4 sm:p-6 ${
+            task.completed ? 'opacity-75' : ''
           }`}
         >
           <div className="flex items-start justify-between">
@@ -86,18 +88,18 @@ const TaskList = ({ tasks, onEdit, onDelete, onToggleComplete }) => {
                 <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-3">
                   <h3
                     className={`text-lg sm:text-xl font-semibold ${
-                      task.completed ? 'line-through text-gray-500' : 'text-gray-800'
+                      task.completed ? 'line-through text-gray-400' : 'text-white'
                     }`}
                   >
                     {task.title}
                   </h3>
                   <div className="flex flex-wrap gap-2">
-                    <span className={`inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs font-medium ${
-                      task.category === 'work' ? 'bg-blue-100 text-blue-800' :
-                      task.category === 'personal' ? 'bg-purple-100 text-purple-800' :
-                      task.category === 'shopping' ? 'bg-green-100 text-green-800' :
-                      task.category === 'health' ? 'bg-red-100 text-red-800' :
-                      'bg-gray-100 text-gray-800'
+                    <span className={`badge ${
+                      task.category === 'work' ? 'badge-work' :
+                      task.category === 'personal' ? 'badge-personal' :
+                      task.category === 'shopping' ? 'badge-shopping' :
+                      task.category === 'health' ? 'badge-health' :
+                      'badge-other'
                     }`}>
                       {task.category === 'work' ? '💼' : 
                        task.category === 'personal' ? '👤' :
@@ -109,7 +111,7 @@ const TaskList = ({ tasks, onEdit, onDelete, onToggleComplete }) => {
                         ✨ My Task
                       </span>
                     ) : (
-                      <span className="inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                      <span className="inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs font-medium bg-gray-800/50 text-gray-300 border border-[#8DBCC7]/20">
                         👤 {task.user_name}'s Task
                       </span>
                     )}
@@ -118,7 +120,7 @@ const TaskList = ({ tasks, onEdit, onDelete, onToggleComplete }) => {
                 
                 {task.description && (
                   <p
-                    className={`text-gray-600 mb-4 leading-relaxed ${
+                    className={`text-gray-300 mb-4 leading-relaxed ${
                       task.completed ? 'line-through' : ''
                     }`}
                   >
@@ -126,7 +128,7 @@ const TaskList = ({ tasks, onEdit, onDelete, onToggleComplete }) => {
                   </p>
                 )}
 
-                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-500 bg-gray-50 rounded-lg p-3">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-400 bg-gray-800/30 rounded-lg p-3 border border-[#8DBCC7]/10">
                   <div className="flex items-center space-x-1">
                     <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -150,7 +152,7 @@ const TaskList = ({ tasks, onEdit, onDelete, onToggleComplete }) => {
               <div className="flex items-center space-x-1 sm:space-x-2 ml-2 sm:ml-4">
                 <button
                   onClick={() => onEdit(task)}
-                  className="p-2 sm:p-3 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all duration-200"
+                  className="p-2 sm:p-3 text-gray-400 hover:text-[#8DBCC7] hover:bg-[#8DBCC7]/20 rounded-xl transition-all duration-200"
                   title="Edit task"
                 >
                   <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -164,8 +166,8 @@ const TaskList = ({ tasks, onEdit, onDelete, onToggleComplete }) => {
                 </button>
                 
                 <button
-                  onClick={() => onDelete(task.id)}
-                  className="p-2 sm:p-3 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all duration-200"
+                  onClick={() => setDeleteTask(task)}
+                  className="p-2 sm:p-3 text-gray-400 hover:text-red-400 hover:bg-red-500/20 rounded-xl transition-all duration-200"
                   title="Delete task"
                 >
                   <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -182,6 +184,18 @@ const TaskList = ({ tasks, onEdit, onDelete, onToggleComplete }) => {
           </div>
         </div>
       ))}
+      
+      {/* Delete Confirmation Modal */}
+      {deleteTask && (
+        <DeleteConfirmModal
+          task={deleteTask}
+          onConfirm={() => {
+            onDelete(deleteTask.id);
+            setDeleteTask(null);
+          }}
+          onCancel={() => setDeleteTask(null)}
+        />
+      )}
     </div>
   );
 };
